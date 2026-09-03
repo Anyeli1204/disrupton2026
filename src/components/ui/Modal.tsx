@@ -31,8 +31,8 @@ export function Modal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      <button type="button" className="absolute inset-0 bg-slate-900/40" aria-label="Cerrar" onClick={onClose} />
-      <div className={`relative z-10 w-full rounded-2xl border border-slate-200 bg-white shadow-xl ${wide ? "max-w-2xl" : "max-w-lg"}`}>
+      <button type="button" className="absolute inset-0 bg-[#0e1a14]/45" aria-label="Cerrar" onClick={onClose} />
+      <div className={`relative z-10 w-full overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl ${wide ? "max-w-2xl" : "max-w-lg"}`}>
         <div className="flex items-center justify-between border-b border-slate-100 px-5 py-4">
           <h2 className="text-base font-semibold text-slate-900">{title}</h2>
           <button type="button" onClick={onClose} className="rounded-md p-1 text-slate-400 hover:bg-slate-50 hover:text-slate-700">

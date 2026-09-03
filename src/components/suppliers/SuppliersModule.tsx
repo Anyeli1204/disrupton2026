@@ -10,10 +10,11 @@ import { formatDate, formatNumber } from "@/lib/format";
 import { getLotsBySupplier } from "@/lib/queries";
 import { documents } from "@/data";
 import type { Supplier, SupplierType } from "@/types";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { clamshellBatches, inputLots, suppliers } from "@/data";
+import { Button } from "@/components/ui/Button";
+import { PageHeader } from "@/components/ui/PageHeader";
 import { SourcedValue } from "@/components/ui/DataSourceBadge";
 import { Tabs } from "@/components/ui/Tabs";
 
@@ -25,18 +26,18 @@ export function SuppliersList() {
 
   return (
     <div className="space-y-4">
-      <div>
-        <h1 className="text-2xl font-semibold">Proveedores e insumos</h1>
-        <p className="text-sm text-slate-500">Agrícolas, empaque, logística y otros insumos de la cadena.</p>
-      </div>
+      <PageHeader
+        title="Proveedores e insumos"
+        description="Agrícolas, empaque, logística y otros insumos de la cadena."
+      />
       <div className="flex flex-wrap gap-2">
         {types.map((t) => (
           <button
             key={t}
             type="button"
             onClick={() => setType(t)}
-            className={`rounded-full px-3 py-1.5 text-xs font-medium ${
-              type === t ? "bg-zhenda text-white" : "bg-white text-slate-600 ring-1 ring-slate-200"
+            className={`rounded-full px-3 py-1.5 text-xs font-medium transition ${
+              type === t ? "bg-zhenda text-white shadow-sm" : "bg-white text-slate-600 ring-1 ring-slate-200 hover:bg-emerald-50"
             }`}
           >
             {t === "all" ? "Todos" : SUPPLIER_TYPE_LABEL[t]}
@@ -74,24 +75,19 @@ export function SupplierDetail({ supplier }: { supplier: Supplier }) {
 
   return (
     <div className="space-y-5">
-      <div className="flex flex-wrap items-start justify-between gap-3">
-        <div>
-          <p className="text-xs uppercase tracking-wide text-slate-400">{SUPPLIER_TYPE_LABEL[supplier.type]}</p>
-          <h1 className="text-2xl font-semibold">{supplier.name}</h1>
-          <div className="mt-2 flex items-center gap-2">
-            <StatusBadge status={supplier.status} />
-            <span className="text-sm text-slate-500">{supplier.code}</span>
-          </div>
-        </div>
-        {inputView && (
-          <Link
-            href={`/trazabilidad?q=${batch?.id ?? inputLot?.id}`}
-            className="rounded-lg bg-zhenda px-3 py-2 text-sm font-medium text-white"
-          >
-            Explorar este insumo
-          </Link>
-        )}
-      </div>
+      <PageHeader
+        eyebrow={SUPPLIER_TYPE_LABEL[supplier.type]}
+        title={supplier.name}
+        description={supplier.code}
+        meta={<StatusBadge status={supplier.status} />}
+        actions={
+          inputView ? (
+            <Button variant="primary" href={`/trazabilidad?q=${batch?.id ?? inputLot?.id}`}>
+              Explorar este insumo
+            </Button>
+          ) : undefined
+        }
+      />
 
       <Tabs
         tabs={[
@@ -107,7 +103,7 @@ export function SupplierDetail({ supplier }: { supplier: Supplier }) {
         onChange={setTab}
       />
 
-      <div className="rounded-xl border border-slate-200 bg-white p-5">
+      <div className="zhenda-card p-5">
         {tab === "general" && (
           <div className="grid gap-4 sm:grid-cols-2">
             <Field label="Código">{supplier.code}</Field>
@@ -129,7 +125,7 @@ export function SupplierDetail({ supplier }: { supplier: Supplier }) {
         {tab === "lotes-insumo" && (
           <div className="space-y-3">
             {batches.map((b) => (
-              <div key={b.id} className="rounded-lg border border-slate-100 p-4">
+              <div key={b.id} className="rounded-2xl border border-emerald-100 bg-emerald-50/30 p-4">
                 <p className="font-medium">
                   Lote <EntityLink type="clamshellBatch" id={b.id} />
                 </p>
@@ -141,7 +137,7 @@ export function SupplierDetail({ supplier }: { supplier: Supplier }) {
               </div>
             ))}
             {suppliedInputs.map((b) => (
-              <div key={b.id} className="rounded-lg border border-slate-100 p-4">
+              <div key={b.id} className="rounded-2xl border border-emerald-100 bg-emerald-50/30 p-4">
                 <p className="font-medium">
                   Lote <EntityLink type="inputLot" id={b.id} /> · {b.name}
                 </p>
@@ -160,7 +156,7 @@ export function SupplierDetail({ supplier }: { supplier: Supplier }) {
         {tab === "certs" && (
           <div className="space-y-2">
             {certs.map((c) => (
-              <div key={c.id} className="flex justify-between rounded-lg border border-slate-100 p-3 text-sm">
+              <div key={c.id} className="flex justify-between rounded-2xl border border-emerald-100 bg-emerald-50/30 p-3 text-sm">
                 <span>{c.name} · {c.code}</span>
                 <StatusBadge status={c.status} />
               </div>

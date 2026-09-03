@@ -7,6 +7,7 @@ import { documents } from "@/data";
 import { DOCUMENT_CATEGORY_LABEL } from "@/lib/constants";
 import { formatDate } from "@/lib/format";
 import type { Document, DocumentCategory } from "@/types";
+import { PageHeader } from "@/components/ui/PageHeader";
 import { useMemo, useState } from "react";
 
 export function DocumentsRepository({ highlightId }: { highlightId?: string }) {
@@ -19,18 +20,15 @@ export function DocumentsRepository({ highlightId }: { highlightId?: string }) {
 
   return (
     <div className="space-y-4">
-      <div>
-        <h1 className="text-2xl font-semibold">Documentos</h1>
-        <p className="text-sm text-slate-500">Repositorio documental de la campaña.</p>
-      </div>
+      <PageHeader title="Documentos" description="Repositorio documental de la campaña." />
       <div className="flex flex-wrap gap-2">
         {cats.map((c) => (
           <button
             key={c}
             type="button"
             onClick={() => setCat(c)}
-            className={`rounded-full px-3 py-1.5 text-xs font-medium ${
-              cat === c ? "bg-zhenda text-white" : "bg-white ring-1 ring-slate-200 text-slate-600"
+            className={`rounded-full px-3 py-1.5 text-xs font-medium transition ${
+              cat === c ? "bg-zhenda text-white shadow-sm" : "bg-white ring-1 ring-slate-200 text-slate-600 hover:bg-emerald-50"
             }`}
           >
             {c === "all" ? "Todos" : DOCUMENT_CATEGORY_LABEL[c]}

@@ -9,6 +9,8 @@ import { certifications, qualityControls } from "@/data";
 import { formatDate } from "@/lib/format";
 import { getQualityControl } from "@/lib/queries";
 import type { Certification, QualityControl } from "@/types";
+import { Button } from "@/components/ui/Button";
+import { PageHeader } from "@/components/ui/PageHeader";
 import { Camera } from "lucide-react";
 import { useRouter } from "next/navigation";
 
@@ -16,12 +18,12 @@ export function QualityList() {
   const router = useRouter();
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-semibold">Calidad y certificaciones</h1>
-        <p className="text-sm text-slate-500">Controles de calidad de lote y certificados de fundos, planta y proveedores.</p>
-      </div>
+      <PageHeader
+        title="Calidad y certificaciones"
+        description="Controles de calidad de lote y certificados de fundos, planta y proveedores."
+      />
       <section>
-        <h2 className="mb-3 text-sm font-semibold">Controles de calidad</h2>
+        <h2 className="mb-3 text-sm font-semibold text-slate-900">Controles de calidad</h2>
         <DataTable<QualityControl>
           rows={qualityControls}
           rowKey={(r) => r.id}
@@ -50,7 +52,7 @@ export function QualityList() {
 export function CertificationsSection() {
   return (
     <section>
-      <h2 className="mb-3 text-sm font-semibold">Certificaciones</h2>
+      <h2 className="mb-3 text-sm font-semibold text-slate-900">Certificaciones</h2>
       <DataTable<Certification>
         rows={certifications}
         rowKey={(r) => r.id}
@@ -73,11 +75,13 @@ export function QualityDetail({ id }: { id: string }) {
   if (!qc) return <p>Control no encontrado.</p>;
   return (
     <div className="space-y-5">
-      <div>
-        <p className="text-xs uppercase tracking-wide text-slate-400">Control de calidad</p>
-        <h1 className="text-2xl font-semibold">{qc.id}</h1>
-      </div>
-      <div className="grid gap-4 rounded-xl border border-slate-200 bg-white p-5 sm:grid-cols-2">
+      <PageHeader
+        eyebrow="Control de calidad"
+        title={qc.id}
+        meta={<StatusBadge status={qc.status} />}
+        actions={<Button href={`/trazabilidad?q=${qc.packingLotId}`}>Ver trazabilidad</Button>}
+      />
+      <div className="zhenda-card grid gap-4 p-5 sm:grid-cols-2">
         <Field label="Lote">
           <EntityLink type="packingLot" id={qc.packingLotId} />
         </Field>
@@ -107,7 +111,7 @@ export function QualityDetail({ id }: { id: string }) {
         <h2 className="mb-2 text-sm font-semibold">Fotografías</h2>
         <div className="flex flex-wrap gap-2">
           {qc.photos.map((p) => (
-            <div key={p.id} className="flex h-32 w-44 flex-col items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-400">
+            <div key={p.id} className="zhenda-photo h-32 w-44">
               <Camera className="h-5 w-5" />
               <span className="mt-1 text-xs">{p.label}</span>
               <span className="px-2 text-center text-[11px]">{p.caption}</span>

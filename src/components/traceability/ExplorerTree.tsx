@@ -76,7 +76,7 @@ export function ExplorerTree({
   return (
     <>
       <div className="space-y-4">
-        <section className="overflow-hidden rounded-2xl border border-slate-200 bg-white">
+        <section className="zhenda-card overflow-hidden">
           <div className="px-5 pt-5">
             <div className="flex flex-wrap items-center justify-between gap-2">
               <h2 className="flex items-center gap-2 text-lg font-semibold text-zhenda">
@@ -152,7 +152,7 @@ export function ExplorerTree({
             <button
               type="button"
               onClick={() => router.push(entityHref(selected.type, selected.id.split(",")[0]))}
-              className="rounded-lg bg-zhenda px-4 py-2 text-sm font-medium text-white"
+              className="inline-flex items-center justify-center rounded-full bg-zhenda px-4 py-2 text-sm font-medium text-white"
             >
               Ver ficha completa
             </button>
@@ -167,7 +167,7 @@ export function ExplorerTree({
 
 function SummaryBar({ summary, mode }: { summary: ReturnType<typeof journeySummary>; mode: ExplorerMode }) {
   return (
-    <div className="mt-4 flex flex-wrap items-center gap-4 rounded-xl bg-slate-50 px-3 py-3">
+    <div className="mt-4 flex flex-wrap items-center gap-4 rounded-xl bg-emerald-50/70 px-3 py-3">
       <span className="relative h-14 w-14 shrink-0 overflow-hidden rounded-xl ring-1 ring-emerald-100">
         <Image src={EXPLORER_PHOTOS.blueberries} alt="" fill className="object-cover" sizes="56px" />
       </span>
@@ -319,7 +319,7 @@ function CompactItem({
     <button
       type="button"
       onClick={onSelect}
-      className="flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-3 py-2 text-left hover:border-emerald-200 hover:bg-emerald-50/40"
+      className="flex items-center gap-3 rounded-xl border border-emerald-100 bg-white px-3 py-2 text-left hover:border-emerald-200 hover:bg-emerald-50/40"
     >
       <span className="relative h-11 w-11 shrink-0 overflow-hidden rounded-lg">
         <Image src={photo} alt="" fill className="object-cover" sizes="44px" />

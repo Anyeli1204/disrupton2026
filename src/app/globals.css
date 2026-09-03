@@ -1,11 +1,13 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f4f6f3;
-  --foreground: #1a241d;
-  --zhenda: #1f6b4a;
-  --zhenda-dark: #15251c;
-  --sidebar: #122018;
+  --background: #e9efe9;
+  --foreground: #122018;
+  --zhenda: #1b6a46;
+  --zhenda-dark: #102017;
+  --sidebar: #0e1a14;
+  --surface: #ffffff;
+  --muted: #5c6b62;
 }
 
 @theme inline {
@@ -22,7 +24,10 @@ body {
 }
 
 body {
-  background: var(--background);
+  background:
+    radial-gradient(900px 320px at 100% -8%, rgba(27, 106, 70, 0.12), transparent 55%),
+    radial-gradient(700px 280px at -10% 100%, rgba(18, 32, 24, 0.06), transparent 50%),
+    var(--background);
   color: var(--foreground);
   font-family: var(--font-ibm-plex-sans), "Segoe UI", sans-serif;
 }
@@ -37,6 +42,50 @@ body {
 }
 
 .zhenda-scroll::-webkit-scrollbar-thumb {
-  background: #c5d0c6;
+  background: #b7c6ba;
   border-radius: 99px;
+}
+
+.zhenda-card {
+  border: 1px solid rgb(18 32 24 / 0.08);
+  background: var(--surface);
+  border-radius: 1rem;
+  box-shadow: 0 1px 2px rgb(18 32 24 / 0.04), 0 8px 24px rgb(18 32 24 / 0.04);
+}
+
+.zhenda-input,
+.zhenda-select,
+textarea.zhenda-input {
+  width: 100%;
+  border-radius: 0.85rem;
+  border: 1px solid rgb(226 232 225);
+  background: #fff;
+  padding: 0.55rem 0.85rem;
+  font-size: 0.875rem;
+  color: #122018;
+  outline: none;
+}
+
+.zhenda-select {
+  width: auto;
+  border-radius: 9999px;
+  box-shadow: 0 1px 2px rgb(18 32 24 / 0.04);
+}
+
+.zhenda-input:focus,
+.zhenda-select:focus,
+textarea.zhenda-input:focus {
+  border-color: var(--zhenda);
+  box-shadow: 0 0 0 3px rgb(27 106 70 / 0.16);
+}
+
+.zhenda-photo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 1rem;
+  border: 1px dashed rgb(27 106 70 / 0.28);
+  background: rgb(236 247 240);
+  color: rgb(27 106 70 / 0.7);
 }

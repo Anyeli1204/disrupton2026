@@ -2,6 +2,7 @@
 
 import { DataTable } from "@/components/ui/DataTable";
 import { EntityLink } from "@/components/ui/EntityLink";
+import { PageHeader } from "@/components/ui/PageHeader";
 import { StatusBadge } from "@/components/ui/StatusBadge";
 import { packingLots } from "@/data";
 import { LOT_STATUS_LABEL } from "@/lib/constants";
@@ -25,24 +26,24 @@ export function LotsList() {
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-wrap items-end justify-between gap-3">
-        <div>
-          <h1 className="text-2xl font-semibold">Lotes de empaque</h1>
-          <p className="text-sm text-slate-500">Identificador maestro asociado al QR del clamshell.</p>
-        </div>
-        <select
-          className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm"
-          value={estado ?? ""}
-          onChange={(e) => router.push(e.target.value ? `/lotes?estado=${e.target.value}` : "/lotes")}
-        >
-          <option value="">Todos los estados</option>
-          {Object.entries(LOT_STATUS_LABEL).map(([k, v]) => (
-            <option key={k} value={k}>
-              {v}
-            </option>
-          ))}
-        </select>
-      </div>
+      <PageHeader
+        title="Lotes de empaque"
+        description="Identificador maestro asociado al QR del clamshell."
+        actions={
+          <select
+            className="zhenda-select"
+            value={estado ?? ""}
+            onChange={(e) => router.push(e.target.value ? `/lotes?estado=${e.target.value}` : "/lotes")}
+          >
+            <option value="">Todos los estados</option>
+            {Object.entries(LOT_STATUS_LABEL).map(([k, v]) => (
+              <option key={k} value={k}>
+                {v}
+              </option>
+            ))}
+          </select>
+        }
+      />
       <DataTable<PackingLot>
         rows={rows}
         rowKey={(r) => r.id}

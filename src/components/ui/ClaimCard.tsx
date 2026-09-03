@@ -6,7 +6,7 @@ import { StatusBadge } from "./StatusBadge";
 
 export function ClaimCard({ claim }: { claim: Claim }) {
   return (
-    <Link href={`/reclamos/${claim.id}`} className="block rounded-xl border border-slate-200 bg-white p-4 hover:border-zhenda/40">
+    <Link href={`/reclamos/${claim.id}`} className="zhenda-card block p-4 transition hover:-translate-y-0.5 hover:border-zhenda/30">
       <div className="flex items-start justify-between gap-3">
         <div>
           <p className="text-sm font-semibold text-slate-900">{claim.id}</p>

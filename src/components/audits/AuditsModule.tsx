@@ -7,6 +7,8 @@ import { packingLots } from "@/data";
 import { formatDate, formatDateTime } from "@/lib/format";
 import { getDocumentsForEntity, lotContext } from "@/lib/queries";
 import { useZhendaStore } from "@/lib/store";
+import { Button } from "@/components/ui/Button";
+import { PageHeader } from "@/components/ui/PageHeader";
 import { FileDown } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -19,38 +21,37 @@ export function AuditsList() {
 
   return (
     <div className="space-y-5">
-      <div>
-        <h1 className="text-2xl font-semibold">Auditorías</h1>
-        <p className="text-sm text-slate-500">Genere expedientes de trazabilidad para auditorías y clientes.</p>
-      </div>
-      <div className="rounded-xl border border-slate-200 bg-white p-5">
+      <PageHeader
+        title="Auditorías"
+        description="Genere expedientes de trazabilidad para auditorías y clientes."
+      />
+      <div className="zhenda-card p-5">
         <h2 className="text-sm font-semibold">Generar expediente de trazabilidad</h2>
         <div className="mt-3 flex flex-wrap gap-2">
-          <select className="rounded-lg border border-slate-200 px-3 py-2 text-sm" value={lot} onChange={(e) => setLot(e.target.value)}>
+          <select className="zhenda-select" value={lot} onChange={(e) => setLot(e.target.value)}>
             {packingLots.slice(0, 12).map((l) => (
               <option key={l.id} value={l.id}>
                 {l.id}
               </option>
             ))}
           </select>
-          <button
-            type="button"
-            className="rounded-lg bg-zhenda px-4 py-2 text-sm font-medium text-white"
+          <Button
+            variant="primary"
             onClick={() => {
               const item = store.addDossier(lot);
               router.push(`/auditorias/${item.id}`);
             }}
           >
             Generar expediente de trazabilidad
-          </button>
+          </Button>
         </div>
       </div>
       <section>
         <h2 className="mb-3 text-sm font-semibold">Historial de expedientes</h2>
-        <ul className="divide-y divide-slate-100 overflow-hidden rounded-xl border border-slate-200 bg-white">
+        <ul className="zhenda-card divide-y divide-slate-100 overflow-hidden">
           {store.generatedDossiers.map((d) => (
             <li key={d.id}>
-              <Link href={`/auditorias/${d.id}`} className="flex justify-between px-4 py-3 text-sm hover:bg-slate-50">
+              <Link href={`/auditorias/${d.id}`} className="flex justify-between px-4 py-3 text-sm hover:bg-emerald-50/60">
                 <span className="font-medium">{d.id}</span>
                 <span className="text-slate-500">
                   {d.lotId} · {formatDateTime(d.createdAt)}
@@ -97,19 +98,19 @@ export function AuditDossier({ id }: { id: string }) {
 
   return (
     <div className="space-y-5">
-      <div className="flex flex-wrap items-start justify-between gap-3">
-        <div>
-          <p className="text-xs uppercase tracking-wide text-slate-400">Expediente</p>
-          <h1 className="text-2xl font-semibold">{id}</h1>
-          <p className="text-sm text-slate-500">Lote {lot.id}</p>
-        </div>
-        <button type="button" onClick={() => setPdfOpen(true)} className="inline-flex items-center gap-2 rounded-lg bg-zhenda px-3 py-2 text-sm font-medium text-white">
-          <FileDown className="h-4 w-4" /> Exportar PDF
-        </button>
-      </div>
+      <PageHeader
+        eyebrow="Expediente"
+        title={id}
+        description={`Lote ${lot.id}`}
+        actions={
+          <Button variant="primary" onClick={() => setPdfOpen(true)}>
+            <FileDown className="h-4 w-4" /> Exportar PDF
+          </Button>
+        }
+      />
       <div className="space-y-3">
         {sections.map((s) => (
-          <section key={s.n} className="rounded-xl border border-slate-200 bg-white p-4">
+          <section key={s.n} className="zhenda-card p-4">
             <h2 className="text-sm font-semibold text-slate-900">
               {s.n}. {s.title}
             </h2>

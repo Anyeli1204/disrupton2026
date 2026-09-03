@@ -35,7 +35,7 @@ export function TraceabilityView({ initialQuery }: { initialQuery: string }) {
 
   return (
     <div className="space-y-4">
-      <section className="overflow-hidden rounded-2xl border border-emerald-900/10 bg-[#122018] text-white">
+      <section className="overflow-hidden rounded-2xl border border-emerald-900/10 bg-[#0e1a14] text-white shadow-sm">
         <div className="grid lg:grid-cols-[1.4fr_0.6fr]">
           <div className="p-4 sm:p-5">
             <div className="flex flex-wrap items-start justify-between gap-3">
@@ -75,13 +75,13 @@ export function TraceabilityView({ initialQuery }: { initialQuery: string }) {
               sizes="28vw"
               priority
             />
-            <div className="absolute inset-0 bg-gradient-to-l from-transparent to-[#122018]" />
+            <div className="absolute inset-0 bg-gradient-to-l from-transparent to-[#0e1a14]" />
           </div>
         </div>
       </section>
 
       {record && (
-        <div className="flex flex-wrap items-center gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3">
+        <div className="zhenda-card flex flex-wrap items-center gap-3 px-4 py-3">
           <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-50 text-zhenda">
             <TypeIcon className="h-4 w-4" />
           </span>
@@ -99,7 +99,9 @@ export function TraceabilityView({ initialQuery }: { initialQuery: string }) {
       {view && tree ? (
         <ExplorerTree root={tree} mode={mode} inputs={view.inputs} quality={view.quality} />
       ) : (
-        <p className="text-sm text-slate-500">No se encontró un identificador relacionado en los sistemas conectados.</p>
+        <p className="zhenda-card px-5 py-10 text-center text-sm text-slate-500">
+          No se encontró un identificador relacionado en los sistemas conectados.
+        </p>
       )}
     </div>
   );

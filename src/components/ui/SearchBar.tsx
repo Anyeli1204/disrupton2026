@@ -35,7 +35,7 @@ export function SearchBar({
         value={q}
         onChange={(e) => setQ(e.target.value)}
         placeholder={placeholder}
-        className={`w-full rounded-xl border border-slate-200 bg-white ${pad} pl-10 text-slate-800 shadow-sm outline-none ring-zhenda/20 placeholder:text-slate-400 focus:border-zhenda focus:ring-2`}
+        className={`w-full rounded-full border border-slate-200 bg-white ${pad} pl-10 text-slate-800 shadow-sm outline-none ring-zhenda/20 placeholder:text-slate-400 focus:border-zhenda focus:ring-2`}
       />
     </form>
   );

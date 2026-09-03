@@ -1,9 +1,11 @@
 "use client";
 
+import { Button } from "@/components/ui/Button";
 import { DataSourceBadge, SourcedValue } from "@/components/ui/DataSourceBadge";
 import { DocumentCard } from "@/components/ui/DocumentCard";
 import { EntityLink } from "@/components/ui/EntityLink";
 import { Modal } from "@/components/ui/Modal";
+import { PageHeader } from "@/components/ui/PageHeader";
 import { StatusBadge } from "@/components/ui/StatusBadge";
 import { Tabs } from "@/components/ui/Tabs";
 import { Field } from "@/components/traceability/TraceabilityTimeline";
@@ -51,38 +53,28 @@ export function LotDetail({ lot }: { lot: PackingLot }) {
 
   return (
     <div className="space-y-5">
-      <div className="flex flex-wrap items-start justify-between gap-3">
-        <div>
-          <p className="text-xs uppercase tracking-wide text-slate-400">Lote de empaque</p>
-          <h1 className="text-2xl font-semibold">{lot.id}</h1>
-          <div className="mt-2 flex flex-wrap items-center gap-2">
-            <StatusBadge status={status} />
-            <span className="text-sm text-slate-500">
-              {ctx.product?.name} · {lot.variety} · {ctx.farm?.name} · {lot.destinationCountry}
-            </span>
-          </div>
-        </div>
-        <div className="flex flex-wrap gap-2">
-          <Link href={`/trazabilidad?q=${lot.id}`} className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm">
-            Ver trazabilidad
-          </Link>
-          <Link href={`/destinos/${lot.id}`} className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm">
-            Identificar destinos
-          </Link>
-          <button type="button" onClick={() => setStatusOpen(true)} className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm">
-            Cambiar estado
-          </button>
-          {(status === "observado" || status === "sujeto_a_retiro" || status === "bloqueado") && (
-            <button type="button" onClick={startRecall} className="rounded-lg bg-red-700 px-3 py-2 text-sm font-medium text-white">
-              Iniciar retiro
-            </button>
-          )}
-        </div>
-      </div>
+      <PageHeader
+        eyebrow="Lote de empaque"
+        title={lot.id}
+        description={`${ctx.product?.name} · ${lot.variety} · ${ctx.farm?.name} · ${lot.destinationCountry}`}
+        meta={<StatusBadge status={status} />}
+        actions={
+          <>
+            <Button href={`/trazabilidad?q=${lot.id}`}>Ver trazabilidad</Button>
+            <Button href={`/destinos/${lot.id}`}>Identificar destinos</Button>
+            <Button onClick={() => setStatusOpen(true)}>Cambiar estado</Button>
+            {(status === "observado" || status === "sujeto_a_retiro" || status === "bloqueado") && (
+              <Button variant="danger" onClick={startRecall}>
+                Iniciar retiro
+              </Button>
+            )}
+          </>
+        }
+      />
 
       <Tabs tabs={TABS} value={tab} onChange={setTab} />
 
-      <div className="rounded-xl border border-slate-200 bg-white p-5">
+      <div className="zhenda-card p-5">
         {tab === "resumen" && (
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             <Field label="Producto">{ctx.product?.name}</Field>
@@ -200,7 +192,7 @@ export function LotDetail({ lot }: { lot: PackingLot }) {
         {tab === "calidad" && (
           <div className="space-y-4">
             {ctx.qcs.map((qc) => (
-              <div key={qc.id} className="rounded-lg border border-slate-100 p-4">
+              <div key={qc.id} className="rounded-2xl border border-emerald-100 bg-emerald-50/30 p-4">
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <EntityLink type="qualityControl" id={qc.id} />
                   <StatusBadge status={qc.result.value} />
@@ -225,7 +217,7 @@ export function LotDetail({ lot }: { lot: PackingLot }) {
                 <p className="mt-3 text-sm text-slate-600">{qc.observations}</p>
                 <div className="mt-3 flex flex-wrap gap-2">
                   {qc.photos.map((p) => (
-                    <div key={p.id} className="flex h-24 w-36 flex-col items-center justify-center rounded-lg bg-slate-100 text-slate-400">
+                    <div key={p.id} className="zhenda-photo h-24 w-36">
                       <Camera className="h-5 w-5" />
                       <span className="mt-1 text-[11px]">{p.label}</span>
                     </div>
@@ -272,7 +264,7 @@ export function LotDetail({ lot }: { lot: PackingLot }) {
         {tab === "destinos" && (
           <div className="space-y-3">
             {ctx.dests.map(({ destination, supermarket, importer, cd }) => (
-              <div key={destination.id} className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-slate-100 p-3">
+              <div key={destination.id} className="flex flex-wrap items-center justify-between gap-2 rounded-2xl border border-emerald-100 bg-emerald-50/30 p-3">
                 <div>
                   <p className="font-medium">{supermarket?.name}</p>
                   <p className="text-xs text-slate-500">
@@ -294,7 +286,7 @@ export function LotDetail({ lot }: { lot: PackingLot }) {
         {tab === "incidencias" && (
           <div className="space-y-3">
             {ctx.claims.map((c) => (
-              <div key={c.id} className="flex items-center justify-between rounded-lg border border-slate-100 p-3">
+              <div key={c.id} className="flex items-center justify-between rounded-2xl border border-emerald-100 bg-emerald-50/30 p-3">
                 <div>
                   <EntityLink type="claim" id={c.id} />
                   <p className="text-sm text-slate-600">{c.problem}</p>
@@ -333,7 +325,7 @@ export function LotDetail({ lot }: { lot: PackingLot }) {
                 store.setLotStatus(lot.id, s);
                 setStatusOpen(false);
               }}
-              className="flex items-center justify-between rounded-lg border border-slate-200 px-3 py-2 text-left hover:bg-slate-50"
+              className="flex items-center justify-between rounded-xl border border-slate-200 px-3 py-2 text-left hover:bg-emerald-50/70"
             >
               <StatusBadge status={s} />
               {status === s && <span className="text-xs text-zhenda">Actual</span>}

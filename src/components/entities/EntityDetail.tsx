@@ -2,19 +2,19 @@
 
 import { DataSourceBadge } from "@/components/ui/DataSourceBadge";
 import { EntityLink } from "@/components/ui/EntityLink";
+import { Button } from "@/components/ui/Button";
+import { PageHeader } from "@/components/ui/PageHeader";
 import { Field } from "@/components/traceability/TraceabilityTimeline";
 import { entityTypeLabel } from "@/lib/format";
 import { loadEntity } from "@/lib/queries";
 import type { EntityType } from "@/types";
-import Link from "next/link";
 
 export function EntityDetail({ type, id }: { type: string; id: string }) {
   const entity = loadEntity(type, id);
   if (!entity) {
     return (
       <div>
-        <h1 className="text-xl font-semibold">{id}</h1>
-        <p className="mt-2 text-sm text-slate-500">No hay una ficha detallada para este identificador.</p>
+        <PageHeader eyebrow="Entidad" title={id} description="No hay una ficha detallada para este identificador." />
       </div>
     );
   }
@@ -34,27 +34,27 @@ export function EntityDetail({ type, id }: { type: string; id: string }) {
 
   return (
     <div className="space-y-5">
-      <div>
-        <p className="text-xs uppercase tracking-wide text-slate-400">{entityTypeLabel(type)}</p>
-        <h1 className="text-2xl font-semibold">{("name" in entity && entity.name) ? String(entity.name) : id}</h1>
-      </div>
-      <div className="grid gap-4 rounded-xl border border-slate-200 bg-white p-5 sm:grid-cols-2">
+      <PageHeader
+        eyebrow={entityTypeLabel(type)}
+        title={("name" in entity && entity.name) ? String(entity.name) : id}
+        actions={
+          packingLotHint ? (
+            <>
+              <Button variant="primary" href={`/lotes/${packingLotHint}`}>
+                Ver lote {packingLotHint}
+              </Button>
+              <Button href={`/trazabilidad?q=${id}`}>Ver trazabilidad</Button>
+            </>
+          ) : undefined
+        }
+      />
+      <div className="zhenda-card grid gap-4 p-5 sm:grid-cols-2">
         {records.map(([k, v]) => (
           <Field key={k} label={k}>
             <Value k={k} v={v} />
           </Field>
         ))}
       </div>
-      {packingLotHint && (
-        <div className="flex flex-wrap gap-2">
-          <Link href={`/lotes/${packingLotHint}`} className="rounded-lg bg-zhenda px-3 py-2 text-sm text-white">
-            Ver lote {packingLotHint}
-          </Link>
-          <Link href={`/trazabilidad?q=${id}`} className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm">
-            Ver trazabilidad
-          </Link>
-        </div>
-      )}
     </div>
   );
 }
@@ -73,7 +73,7 @@ function Value({ k, v }: { k: string; v: unknown }) {
     return (
       <span className="flex flex-wrap gap-1">
         {v.slice(0, 12).map((item) => (
-          <span key={String(item)} className="rounded bg-slate-100 px-1.5 py-0.5 text-xs">
+          <span key={String(item)} className="rounded-full bg-emerald-50 px-2 py-0.5 text-xs text-zhenda">
             {linkable(k, String(item))}
           </span>
         ))}

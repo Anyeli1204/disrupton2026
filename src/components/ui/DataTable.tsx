@@ -14,9 +14,9 @@ export function DataTable<T>({
   onRowClick?: (row: T) => void;
 }) {
   return (
-    <div className="overflow-x-auto rounded-xl border border-slate-200 bg-white">
+    <div className="zhenda-card overflow-x-auto">
       <table className="min-w-full text-sm">
-        <thead className="bg-slate-50 text-left text-[11px] font-semibold uppercase tracking-wide text-slate-500">
+        <thead className="bg-emerald-50/70 text-left text-[11px] font-semibold uppercase tracking-wide text-slate-500">
           <tr>
             {columns.map((c) => (
               <th key={c.key} className={`whitespace-nowrap px-4 py-3 ${c.className ?? ""}`}>
@@ -36,11 +36,11 @@ export function DataTable<T>({
           {rows.map((row) => (
             <tr
               key={rowKey(row)}
-              className={onRowClick ? "cursor-pointer hover:bg-emerald-50/40" : "hover:bg-slate-50/80"}
+              className={onRowClick ? "cursor-pointer hover:bg-emerald-50/50" : "hover:bg-slate-50/80"}
               onClick={onRowClick ? () => onRowClick(row) : undefined}
             >
               {columns.map((c) => (
-                <td key={c.key} className={`px-4 py-3 align-middle text-slate-700 ${c.className ?? ""}`}>
+                <td key={c.key} className={`px-4 py-3.5 align-middle text-slate-700 ${c.className ?? ""}`}>
                   {c.render(row)}
                 </td>
               ))}

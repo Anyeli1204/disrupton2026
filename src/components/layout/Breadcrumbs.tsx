@@ -56,7 +56,7 @@ export function Breadcrumbs() {
   if (pathname === "/" && !from) return null;
 
   return (
-    <nav className="mb-4 flex flex-wrap items-center gap-1 text-xs text-slate-500">
+    <nav className="mb-5 flex flex-wrap items-center gap-1 text-xs text-slate-500">
       {crumbs.map((c, i) => (
         <span key={`${c.href}-${i}`} className="inline-flex items-center gap-1">
           {i > 0 && <ChevronRight className="h-3 w-3" />}

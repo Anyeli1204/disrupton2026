@@ -6,7 +6,8 @@ import { StatusBadge } from "@/components/ui/StatusBadge";
 import { destinations, importers, packingLots, supermarkets, distributionCenters } from "@/data";
 import { getImporter, getPackingLot, getSupermarket, relatedDestinationsSummary } from "@/lib/queries";
 import type { Destination } from "@/types";
-import Link from "next/link";
+import { Button } from "@/components/ui/Button";
+import { PageHeader } from "@/components/ui/PageHeader";
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 
@@ -35,11 +36,8 @@ export function DestinationsList() {
 
   return (
     <div className="space-y-4">
-      <div>
-        <h1 className="text-2xl font-semibold">Destinos</h1>
-        <p className="text-sm text-slate-500">Consulte a dónde fue enviado cada lote.</p>
-      </div>
-      <div className="grid gap-2 rounded-xl border border-slate-200 bg-white p-4 sm:grid-cols-2 lg:grid-cols-4">
+      <PageHeader title="Destinos" description="Consulte a dónde fue enviado cada lote." />
+      <div className="zhenda-card grid gap-2 p-4 sm:grid-cols-2 lg:grid-cols-4">
         <Select label="Lote" value={lot} onChange={setLot} options={packingLots.slice(0, 12).map((l) => [l.id, l.id])} />
         <Select label="País" value={country} onChange={setCountry} options={[...new Set(destinations.map((d) => d.country))].map((c) => [c, c])} />
         <Select label="Importador" value={importer} onChange={setImporter} options={importers.map((i) => [i.id, i.name])} />
@@ -91,7 +89,7 @@ function Select({
     <label className="text-xs text-slate-500">
       {label}
       <select
-        className="mt-1 w-full rounded-lg border border-slate-200 bg-white px-2 py-2 text-sm text-slate-800"
+        className="zhenda-input mt-1"
         value={value}
         onChange={(e) => onChange(e.target.value)}
       >
@@ -111,16 +109,13 @@ export function LotDestinations({ loteId }: { loteId: string }) {
   const dests = relatedDestinationsSummary(loteId);
   return (
     <div className="space-y-4">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <h1 className="text-2xl font-semibold">Destinos de {loteId}</h1>
-          <p className="text-sm text-slate-500">{lot?.variety} · {lot?.destinationCountry}</p>
-        </div>
-        <Link href={`/trazabilidad?q=${loteId}`} className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm">
-          Ver trazabilidad
-        </Link>
-      </div>
-      <div className="overflow-hidden rounded-xl border border-slate-200 bg-white">
+      <PageHeader
+        eyebrow="Destinos"
+        title={`Destinos de ${loteId}`}
+        description={`${lot?.variety} · ${lot?.destinationCountry}`}
+        actions={<Button href={`/trazabilidad?q=${loteId}`}>Ver trazabilidad</Button>}
+      />
+      <div className="zhenda-card overflow-hidden">
         {dests.map(({ destination, supermarket, importer, cd }) => (
           <div key={destination.id} className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 px-4 py-3 last:border-0">
             <div>

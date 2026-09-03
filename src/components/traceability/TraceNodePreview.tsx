@@ -77,7 +77,7 @@ function Chip({ type, id, children }: { type: EntityType; id: string; children?:
 function Row({ label, children }: { label: string; children: React.ReactNode }) {
   if (children === null || children === undefined || children === "") return null;
   return (
-    <div className="rounded-lg bg-slate-50 px-3 py-2.5">
+    <div className="rounded-xl bg-emerald-50/60 px-3 py-2.5">
       <p className="text-[10px] font-semibold uppercase tracking-wide text-slate-400">{label}</p>
       <div className="mt-1 text-sm font-medium text-slate-900">{children}</div>
     </div>

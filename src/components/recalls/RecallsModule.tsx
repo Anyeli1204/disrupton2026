@@ -11,7 +11,8 @@ import { formatDateTime } from "@/lib/format";
 import { relatedDestinationsSummary } from "@/lib/queries";
 import { useZhendaStore } from "@/lib/store";
 import type { Recall, RecallStatus } from "@/types";
-import Link from "next/link";
+import { Button } from "@/components/ui/Button";
+import { PageHeader } from "@/components/ui/PageHeader";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -21,10 +22,10 @@ export function RecallsList() {
   const router = useRouter();
   return (
     <div className="space-y-4">
-      <div>
-        <h1 className="text-2xl font-semibold">Retiros</h1>
-        <p className="text-sm text-slate-500">Retiros específicos de cajas o pallets, no necesariamente de todo el envío.</p>
-      </div>
+      <PageHeader
+        title="Retiros"
+        description="Retiros específicos de cajas o pallets, no necesariamente de todo el envío."
+      />
       <DataTable<Recall>
         rows={rows}
         rowKey={(r) => r.id}
@@ -54,38 +55,26 @@ export function RecallDetail({ recallId }: { recallId: string }) {
 
   return (
     <div className="space-y-5">
-      <div className="flex flex-wrap items-start justify-between gap-3">
-        <div>
-          <p className="text-xs uppercase tracking-wide text-slate-400">Retiro</p>
-          <h1 className="text-2xl font-semibold">{recall.id}</h1>
-          <div className="mt-2">
-            <StatusBadge status={recall.status} />
-          </div>
-        </div>
-        <div className="flex flex-wrap gap-2">
-          <Link href={`/destinos/${recall.packingLotId}`} className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm">
-            Identificar destinos
-          </Link>
-          <Link href={`/lotes/${recall.packingLotId}`} className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm">
-            Ver productos afectados
-          </Link>
-          <Link href={`/trazabilidad?q=${recall.packingLotId}`} className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm">
-            Ver trazabilidad
-          </Link>
-          <button type="button" onClick={() => setUpdateOpen(true)} className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm">
-            Agregar actualización
-          </button>
-          <button type="button" onClick={() => setStatusOpen(true)} className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm">
-            Cambiar estado
-          </button>
-          <button type="button" onClick={() => store.setRecallStatus(recall.id, "cerrado")} className="rounded-lg bg-slate-800 px-3 py-2 text-sm text-white">
-            Cerrar retiro
-          </button>
-        </div>
-      </div>
+      <PageHeader
+        eyebrow="Retiro"
+        title={recall.id}
+        meta={<StatusBadge status={recall.status} />}
+        actions={
+          <>
+            <Button href={`/destinos/${recall.packingLotId}`}>Identificar destinos</Button>
+            <Button href={`/lotes/${recall.packingLotId}`}>Ver productos afectados</Button>
+            <Button href={`/trazabilidad?q=${recall.packingLotId}`}>Ver trazabilidad</Button>
+            <Button onClick={() => setUpdateOpen(true)}>Agregar actualización</Button>
+            <Button onClick={() => setStatusOpen(true)}>Cambiar estado</Button>
+            <Button variant="dark" onClick={() => store.setRecallStatus(recall.id, "cerrado")}>
+              Cerrar retiro
+            </Button>
+          </>
+        }
+      />
 
       <div className="grid gap-4 lg:grid-cols-3">
-        <section className="rounded-xl border border-slate-200 bg-white p-5 lg:col-span-2">
+        <section className="zhenda-card p-5 lg:col-span-2">
           <div className="grid gap-4 sm:grid-cols-2">
             <Field label="Motivo">{recall.motive}</Field>
             <Field label="Lote">
@@ -103,7 +92,7 @@ export function RecallDetail({ recallId }: { recallId: string }) {
             <h2 className="text-sm font-semibold">Distribución</h2>
             <ul className="mt-3 space-y-2">
               {recall.distribution.map((d) => (
-                <li key={d.supermarketId} className="flex justify-between rounded-lg border border-slate-100 px-3 py-2 text-sm">
+                <li key={d.supermarketId} className="flex justify-between rounded-xl border border-emerald-100 bg-emerald-50/40 px-3 py-2 text-sm">
                   <span>{d.supermarketName}</span>
                   <span>
                     {d.located}/{d.boxes} cajas localizadas
@@ -116,7 +105,7 @@ export function RecallDetail({ recallId }: { recallId: string }) {
             <h2 className="text-sm font-semibold">Actualizaciones</h2>
             <ul className="mt-3 space-y-2">
               {recall.updates.map((u) => (
-                <li key={u.id} className="rounded-lg bg-slate-50 p-3 text-sm">
+                <li key={u.id} className="rounded-xl bg-emerald-50/50 p-3 text-sm">
                   <p className="text-xs text-slate-500">
                     {u.author} · {formatDateTime(u.at)}
                   </p>
@@ -127,7 +116,7 @@ export function RecallDetail({ recallId }: { recallId: string }) {
           </div>
         </section>
         <aside className="space-y-4">
-          <div className="rounded-xl border border-slate-200 bg-white p-5">
+          <div className="zhenda-card p-5">
             <h2 className="text-sm font-semibold">Progreso</h2>
             <p className="mt-2 text-2xl font-semibold">
               {recall.locatedBoxes} / {recall.totalBoxes} cajas localizadas
@@ -136,7 +125,7 @@ export function RecallDetail({ recallId }: { recallId: string }) {
               <ProgressBar value={pct} />
             </div>
           </div>
-          <div className="rounded-xl border border-slate-200 bg-white p-5">
+          <div className="zhenda-card p-5">
             <h2 className="text-sm font-semibold">Supermercados con producto relacionado</h2>
             <ul className="mt-2 space-y-1 text-sm">
               {dests.map(({ supermarket, destination }) => (
@@ -153,7 +142,7 @@ export function RecallDetail({ recallId }: { recallId: string }) {
       <Modal open={statusOpen} title="Estado del retiro" onClose={() => setStatusOpen(false)}>
         <div className="grid gap-2">
           {(Object.keys(RECALL_STATUS_LABEL) as RecallStatus[]).map((s) => (
-            <button key={s} type="button" className="rounded-lg border border-slate-200 px-3 py-2 text-left" onClick={() => { store.setRecallStatus(recall.id, s); setStatusOpen(false); }}>
+            <button key={s} type="button" className="rounded-xl border border-slate-200 px-3 py-2 text-left hover:bg-emerald-50/70" onClick={() => { store.setRecallStatus(recall.id, s); setStatusOpen(false); }}>
               <StatusBadge status={s} />
             </button>
           ))}
@@ -166,7 +155,7 @@ export function RecallDetail({ recallId }: { recallId: string }) {
         footer={
           <button
             type="button"
-            className="rounded-lg bg-zhenda px-4 py-2 text-sm text-white"
+            className="inline-flex items-center justify-center rounded-full bg-zhenda px-4 py-2 text-sm font-medium text-white"
             onClick={() => {
               if (text.trim()) store.addRecallUpdate(recall.id, text.trim());
               setText("");
@@ -177,7 +166,7 @@ export function RecallDetail({ recallId }: { recallId: string }) {
           </button>
         }
       >
-        <textarea value={text} onChange={(e) => setText(e.target.value)} className="h-28 w-full rounded-lg border border-slate-200 p-3 text-sm" />
+        <textarea value={text} onChange={(e) => setText(e.target.value)} className="zhenda-input h-28" />
       </Modal>
     </div>
   );

@@ -10,6 +10,8 @@ import { formatDate, formatDateTime } from "@/lib/format";
 import { investigationForLot } from "@/lib/queries";
 import { useZhendaStore } from "@/lib/store";
 import type { Claim, ClaimStatus, LotStatus } from "@/types";
+import { Button } from "@/components/ui/Button";
+import { PageHeader } from "@/components/ui/PageHeader";
 import { Camera, FileText } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -22,10 +24,10 @@ export function ClaimsInbox() {
 
   return (
     <div className="space-y-4">
-      <div>
-        <h1 className="text-2xl font-semibold">Reclamos e incidencias</h1>
-        <p className="text-sm text-slate-500">Bandeja de reclamos reportados por supermercados e importadores.</p>
-      </div>
+      <PageHeader
+        title="Reclamos e incidencias"
+        description="Bandeja de reclamos reportados por supermercados e importadores."
+      />
       <DataTable<Claim>
         rows={rows}
         rowKey={(r) => r.id}
@@ -72,46 +74,37 @@ export function ClaimDetail({ claim }: { claim: Claim }) {
 
   return (
     <div className="space-y-5">
-      <div className="flex flex-wrap items-start justify-between gap-3">
-        <div>
-          <p className="text-xs uppercase tracking-wide text-slate-400">Reclamo</p>
-          <h1 className="text-2xl font-semibold">{live.id}</h1>
-          <div className="mt-2 flex flex-wrap gap-2">
+      <PageHeader
+        eyebrow="Reclamo"
+        title={live.id}
+        description={live.problem}
+        meta={
+          <>
             <StatusBadge status={live.severity} />
             <StatusBadge status={live.status} />
-          </div>
-        </div>
-        <div className="flex flex-wrap gap-2">
-          <Link href={`/trazabilidad?q=${live.packingLotId}`} className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm">
-            Ver trazabilidad
-          </Link>
-          {inv?.agricultural && (
-            <Link href={`/proveedores/${inv.agricultural.id}`} className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm">
-              Ver proveedor
-            </Link>
-          )}
-          {inv?.lot.qualityControlIds[0] && (
-            <Link href={`/calidad/${inv.lot.qualityControlIds[0]}`} className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm">
-              Ver calidad
-            </Link>
-          )}
-          <Link href={`/destinos/${live.packingLotId}`} className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm">
-            Ver otros destinos
-          </Link>
-          <button type="button" onClick={() => setLotOpen(true)} className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm">
-            Cambiar estado del lote
-          </button>
-          <button type="button" onClick={startRecall} className="rounded-lg bg-red-700 px-3 py-2 text-sm font-medium text-white">
-            Iniciar retiro
-          </button>
-          <button type="button" onClick={() => setReplyOpen(true)} className="rounded-lg bg-zhenda px-3 py-2 text-sm font-medium text-white">
-            Responder reclamo
-          </button>
-        </div>
-      </div>
+          </>
+        }
+        actions={
+          <>
+            <Button href={`/trazabilidad?q=${live.packingLotId}`}>Ver trazabilidad</Button>
+            {inv?.agricultural && <Button href={`/proveedores/${inv.agricultural.id}`}>Ver proveedor</Button>}
+            {inv?.lot.qualityControlIds[0] && (
+              <Button href={`/calidad/${inv.lot.qualityControlIds[0]}`}>Ver calidad</Button>
+            )}
+            <Button href={`/destinos/${live.packingLotId}`}>Ver otros destinos</Button>
+            <Button onClick={() => setLotOpen(true)}>Cambiar estado del lote</Button>
+            <Button variant="danger" onClick={startRecall}>
+              Iniciar retiro
+            </Button>
+            <Button variant="primary" onClick={() => setReplyOpen(true)}>
+              Responder reclamo
+            </Button>
+          </>
+        }
+      />
 
       <div className="grid gap-4 lg:grid-cols-3">
-        <section className="space-y-4 rounded-xl border border-slate-200 bg-white p-5 lg:col-span-2">
+        <section className="zhenda-card space-y-4 p-5 lg:col-span-2">
           <div className="grid gap-4 sm:grid-cols-2">
             <Field label="Cliente">{live.client}</Field>
             <Field label="País">{live.country}</Field>
@@ -131,7 +124,7 @@ export function ClaimDetail({ claim }: { claim: Claim }) {
             <p className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">Fotografías / evidencias</p>
             <div className="mt-2 flex flex-wrap gap-2">
               {live.photos.map((p) => (
-                <div key={p.id} className="flex h-28 w-40 flex-col items-center justify-center rounded-lg bg-slate-100 text-slate-400">
+                <div key={p.id} className="zhenda-photo h-28 w-40">
                   <Camera className="h-5 w-5" />
                   <span className="mt-1 text-[11px]">{p.label}</span>
                 </div>
@@ -157,7 +150,7 @@ export function ClaimDetail({ claim }: { claim: Claim }) {
             </div>
             <ul className="mt-3 space-y-3">
               {live.comments.map((c) => (
-                <li key={c.id} className="rounded-lg bg-slate-50 p-3">
+                <li key={c.id} className="rounded-xl bg-emerald-50/50 p-3">
                   <p className="text-xs text-slate-500">
                     {c.author} · {formatDateTime(c.at)}
                   </p>
@@ -179,7 +172,7 @@ export function ClaimDetail({ claim }: { claim: Claim }) {
         </section>
 
         <aside className="space-y-4">
-          <div className="rounded-xl border border-amber-200 bg-amber-50/50 p-5">
+          <div className="zhenda-card border-amber-200 bg-amber-50/50 p-5">
             <h2 className="text-sm font-semibold">Investigación automática</h2>
             {inv && (
               <dl className="mt-3 space-y-2 text-sm">
@@ -197,7 +190,7 @@ export function ClaimDetail({ claim }: { claim: Claim }) {
             )}
           </div>
           {inv?.impact && (
-            <div className="rounded-xl border border-red-200 bg-red-50/60 p-5">
+            <div className="zhenda-card border-red-200 bg-red-50/60 p-5">
               <h2 className="text-sm font-semibold text-red-900">Alcance del insumo de empaque</h2>
               <p className="mt-1 text-xs text-red-800/80">
                 El lote de clamshell {inv.clamshell?.id} se relaciona con todos los destinos que lo utilizaron.
@@ -223,7 +216,7 @@ export function ClaimDetail({ claim }: { claim: Claim }) {
               )}
             </div>
           )}
-          <div className="rounded-xl border border-slate-200 bg-white p-5">
+          <div className="zhenda-card p-5">
             <h2 className="text-sm font-semibold">Otros productos relacionados</h2>
             <ul className="mt-2 space-y-1 text-sm">
               {inv?.relatedLots.map((l) => (
@@ -234,7 +227,7 @@ export function ClaimDetail({ claim }: { claim: Claim }) {
               {inv?.relatedLots.length === 0 && <li className="text-slate-500">Sin otros lotes del mismo insumo.</li>}
             </ul>
           </div>
-          <div className="rounded-xl border border-slate-200 bg-white p-5">
+          <div className="zhenda-card p-5">
             <h2 className="text-sm font-semibold">Otros destinos potencialmente afectados</h2>
             <p className="mt-1 text-xs text-slate-500">Este lote también fue distribuido a:</p>
             <ul className="mt-2 space-y-2 text-sm">
@@ -256,7 +249,7 @@ export function ClaimDetail({ claim }: { claim: Claim }) {
         footer={
           <button
             type="button"
-            className="rounded-lg bg-zhenda px-4 py-2 text-sm text-white"
+            className="inline-flex items-center justify-center rounded-full bg-zhenda px-4 py-2 text-sm font-medium text-white"
             onClick={() => {
               if (text.trim()) store.addClaimComment(live.id, text.trim());
               setText("");
@@ -270,7 +263,7 @@ export function ClaimDetail({ claim }: { claim: Claim }) {
         <textarea
           value={text}
           onChange={(e) => setText(e.target.value)}
-          className="h-32 w-full rounded-lg border border-slate-200 p-3 text-sm"
+          className="zhenda-input h-32"
           placeholder="Escriba la respuesta para el importador o supermercado…"
         />
       </Modal>
@@ -278,7 +271,7 @@ export function ClaimDetail({ claim }: { claim: Claim }) {
       <Modal open={statusOpen} title="Estado del reclamo" onClose={() => setStatusOpen(false)}>
         <div className="grid gap-2">
           {(Object.keys(CLAIM_STATUS_LABEL) as ClaimStatus[]).map((s) => (
-            <button key={s} type="button" className="rounded-lg border border-slate-200 px-3 py-2 text-left" onClick={() => { store.setClaimStatus(live.id, s); setStatusOpen(false); }}>
+            <button key={s} type="button" className="rounded-xl border border-slate-200 px-3 py-2 text-left hover:bg-emerald-50/70" onClick={() => { store.setClaimStatus(live.id, s); setStatusOpen(false); }}>
               <StatusBadge status={s} />
             </button>
           ))}
@@ -288,7 +281,7 @@ export function ClaimDetail({ claim }: { claim: Claim }) {
       <Modal open={lotOpen} title="Cambiar estado del lote" onClose={() => setLotOpen(false)}>
         <div className="grid gap-2">
           {(Object.keys(LOT_STATUS_LABEL) as LotStatus[]).map((s) => (
-            <button key={s} type="button" className="rounded-lg border border-slate-200 px-3 py-2 text-left" onClick={() => { store.setLotStatus(live.packingLotId, s); setLotOpen(false); }}>
+            <button key={s} type="button" className="rounded-xl border border-slate-200 px-3 py-2 text-left hover:bg-emerald-50/70" onClick={() => { store.setLotStatus(live.packingLotId, s); setLotOpen(false); }}>
               <StatusBadge status={s} />
             </button>
           ))}

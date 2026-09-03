@@ -16,7 +16,7 @@ export function AlertCard({
   }[level];
   const label = level.toUpperCase();
   const inner = (
-    <div className={`rounded-lg border border-slate-200 border-l-4 p-3 ${tone}`}>
+    <div className={`zhenda-card border-l-4 p-3.5 ${tone}`}>
       <p className="text-[10px] font-bold tracking-widest text-slate-500">{label}</p>
       <p className="mt-1 text-sm text-slate-800">{text}</p>
     </div>

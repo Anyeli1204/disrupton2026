@@ -17,18 +17,18 @@ export function TraceModeToggle({
   onChange: (m: TraceMode) => void;
 }) {
   return (
-    <div className="inline-flex rounded-lg border border-slate-200 bg-white p-1 text-sm">
+    <div className="inline-flex rounded-full border border-slate-200 bg-white p-1 text-sm shadow-sm">
       <button
         type="button"
         onClick={() => onChange("inversa")}
-        className={`rounded-md px-3 py-1.5 ${mode === "inversa" ? "bg-zhenda text-white" : "text-slate-600"}`}
+        className={`rounded-full px-3 py-1.5 ${mode === "inversa" ? "bg-zhenda text-white" : "text-slate-600"}`}
       >
         ← Trazabilidad inversa
       </button>
       <button
         type="button"
         onClick={() => onChange("adelante")}
-        className={`rounded-md px-3 py-1.5 ${mode === "adelante" ? "bg-zhenda text-white" : "text-slate-600"}`}
+        className={`rounded-full px-3 py-1.5 ${mode === "adelante" ? "bg-zhenda text-white" : "text-slate-600"}`}
       >
         Trazabilidad hacia adelante →
       </button>
@@ -50,7 +50,7 @@ export function TraceabilityTimeline({
     <>
       {view.layout === "product-inverse" ? (
         <div className="grid gap-4 lg:grid-cols-5">
-          <section className={`rounded-xl border border-slate-200 bg-white p-5 ${view.inputs.length ? "lg:col-span-3" : "lg:col-span-5"}`}>
+          <section className={`zhenda-card p-5 ${view.inputs.length ? "lg:col-span-3" : "lg:col-span-5"}`}>
             <h2 className="mb-4 flex items-center gap-2 text-sm font-semibold text-slate-900">
               <Leaf className="h-4 w-4 text-zhenda" />
               Origen del producto
@@ -58,7 +58,7 @@ export function TraceabilityTimeline({
             <Chain nodes={view.productChain} direction="up" onSelect={setSelected} />
           </section>
           {view.inputs.length > 0 && (
-            <section className="rounded-xl border border-slate-200 bg-white p-5 lg:col-span-2">
+            <section className="zhenda-card p-5 lg:col-span-2">
               <h2 className="mb-4 flex items-center gap-2 text-sm font-semibold text-slate-900">
                 <Package className="h-4 w-4 text-zhenda" />
                 Insumos utilizados
@@ -79,7 +79,7 @@ export function TraceabilityTimeline({
               Trazabilidad hacia adelante del insumo: lotes de empaque que lo utilizaron y sus destinos.
             </p>
           )}
-          <section className="rounded-xl border border-slate-200 bg-white p-5">
+          <section className="zhenda-card p-5">
             <Chain
               nodes={
                 view.layout === "input-forward" || view.layout === "product-forward"
@@ -195,7 +195,7 @@ function TraceNodeModal({
       onClose={onClose}
       wide
       footer={
-        <button type="button" onClick={onOpen} className="rounded-lg bg-zhenda px-4 py-2 text-sm font-medium text-white">
+        <button type="button" onClick={onOpen} className="inline-flex items-center justify-center rounded-full bg-zhenda px-4 py-2 text-sm font-medium text-white">
           Ver ficha completa
         </button>
       }

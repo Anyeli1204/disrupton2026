@@ -6,7 +6,7 @@ import { DataSourceBadge } from "./DataSourceBadge";
 
 export function DocumentCard({ doc }: { doc: DocType }) {
   return (
-    <div className="flex items-start gap-3 rounded-xl border border-slate-200 bg-white p-4">
+    <div className="zhenda-card flex items-start gap-3 p-4">
       <span className="rounded-lg bg-emerald-50 p-2 text-zhenda">
         <FileText className="h-4 w-4" />
       </span>

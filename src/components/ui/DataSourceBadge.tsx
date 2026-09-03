@@ -21,7 +21,7 @@ export function DataSourceBadge({ source, compact = false }: { source: DataSourc
         {!compact && <span className="sr-only">Fuente</span>}
       </button>
       {open && (
-        <span className="absolute left-0 top-5 z-30 w-64 rounded-lg border border-slate-200 bg-white p-3 text-left text-xs shadow-lg">
+        <span className="absolute left-0 top-5 z-30 w-64 rounded-2xl border border-slate-200 bg-white p-3 text-left text-xs shadow-xl">
           <span className="block text-[10px] font-semibold uppercase tracking-wide text-slate-400">Fuente del dato</span>
           <span className="mt-1 block font-medium text-slate-800">{source.source}</span>
           <span className="mt-0.5 block text-slate-500">{source.system}</span>
