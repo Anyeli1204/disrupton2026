@@ -1,0 +1,51 @@
+import type { ProcessingLot } from "@/types";
+import { sourced } from "./sources";
+
+export const processingLots: ProcessingLot[] = [
+  {
+    id: "PROC-0718-05",
+    plant: "Planta Chao",
+    line: "Línea 2 — berries",
+    date: sourced("2026-07-18", "PlantOS", "Sistema de planta PlantOS", "2026-07-18T21:05:00-05:00"),
+    time: "19:40",
+    harvestIds: ["COS-240718-03"],
+    receptionId: "REC-240718-01",
+    kgReceived: 1488,
+    kgOutput: 1412,
+    operator: "Miguel Huamán",
+  },
+  {
+    id: "PROC-0718-06",
+    plant: "Planta Chao",
+    line: "Línea 2 — berries",
+    date: sourced("2026-07-18", "PlantOS", "Sistema de planta PlantOS", "2026-07-18T22:40:00-05:00"),
+    time: "21:10",
+    harvestIds: ["COS-240718-04"],
+    receptionId: "REC-240718-02",
+    kgReceived: 1510,
+    kgOutput: 1436,
+    operator: "Miguel Huamán",
+  },
+  {
+    id: "PROC-0720-02",
+    plant: "Planta Chao",
+    line: "Línea 1 — berries",
+    date: sourced("2026-07-20", "PlantOS", "Sistema de planta PlantOS", "2026-07-20T20:15:00-05:00"),
+    time: "18:00",
+    harvestIds: ["COS-240720-01"],
+    kgReceived: 1210,
+    kgOutput: 1144,
+    operator: "Paola Díaz",
+  },
+  {
+    id: "PROC-0722-01",
+    plant: "Planta Chao",
+    line: "Línea 1 — berries",
+    date: sourced("2026-07-22", "PlantOS", "Sistema de planta PlantOS", "2026-07-22T19:50:00-05:00"),
+    time: "17:30",
+    harvestIds: ["COS-240722-02"],
+    kgReceived: 980,
+    kgOutput: 910,
+    operator: "Paola Díaz",
+  },
+];
