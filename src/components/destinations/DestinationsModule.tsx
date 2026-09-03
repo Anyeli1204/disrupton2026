@@ -1,12 +1,13 @@
 "use client";
 
+import { Button } from "@/components/ui/Button";
+import { CountryFlag } from "@/components/ui/CountryFlag";
 import { DataTable } from "@/components/ui/DataTable";
 import { EntityLink } from "@/components/ui/EntityLink";
 import { StatusBadge } from "@/components/ui/StatusBadge";
 import { destinations, importers, packingLots, supermarkets, distributionCenters } from "@/data";
 import { getImporter, getPackingLot, getSupermarket, relatedDestinationsSummary } from "@/lib/queries";
 import type { Destination } from "@/types";
-import { Button } from "@/components/ui/Button";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -65,7 +66,12 @@ export function DestinationsList() {
           { key: "imp", header: "Importador", render: (r) => getImporter(r.importerId)?.name ?? r.importerId },
           { key: "cd", header: "Centro distribución", render: (r) => r.distributionCenterId },
           { key: "sm", header: "Supermercado", render: (r) => getSupermarket(r.supermarketId)?.name ?? r.supermarketId },
-          { key: "country", header: "País", render: (r) => r.country },
+          { key: "country", header: "País", render: (r) => (
+            <span className="inline-flex items-center gap-2">
+              <CountryFlag country={r.country} />
+              {r.country}
+            </span>
+          ) },
           { key: "qty", header: "Cantidad", render: (r) => `${r.boxCount} cajas` },
           { key: "st", header: "Estado", render: (r) => <StatusBadge status={r.status} /> },
         ]}
@@ -118,11 +124,14 @@ export function LotDestinations({ loteId }: { loteId: string }) {
       <div className="zhenda-card overflow-hidden">
         {dests.map(({ destination, supermarket, importer, cd }) => (
           <div key={destination.id} className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 px-4 py-3 last:border-0">
-            <div>
-              <p className="font-medium">{supermarket?.name}</p>
-              <p className="text-xs text-slate-500">
-                {importer?.name} · {cd?.name} ({cd?.code}) · {destination.country}
-              </p>
+            <div className="flex items-start gap-2">
+              <CountryFlag country={destination.country} />
+              <div>
+                <p className="font-medium">{supermarket?.name}</p>
+                <p className="text-xs text-slate-500">
+                  {importer?.name} · {cd?.name} ({cd?.code}) · {destination.country}
+                </p>
+              </div>
             </div>
             <div className="flex items-center gap-3">
               <span className="text-sm">{destination.boxCount} cajas {destination.boxFrom && `(${destination.boxFrom}–${destination.boxTo})`}</span>

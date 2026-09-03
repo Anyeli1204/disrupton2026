@@ -1,7 +1,8 @@
 "use client";
 
 import { claims as seedClaims, packingLots as seedLots, recalls as seedRecalls } from "@/data";
-import type { Claim, ClaimStatus, LotStatus, Recall, RecallStatus } from "@/types";
+import { sourced } from "@/data/sources";
+import type { Claim, ClaimStatus, LotStatus, PackingLot, Recall, RecallStatus } from "@/types";
 import { createContext, useCallback, useContext, useMemo, useSyncExternalStore, type ReactNode } from "react";
 
 const STORAGE_KEY = "zhenda-agro-store-v1";
@@ -9,6 +10,7 @@ const STORAGE_KEY = "zhenda-agro-store-v1";
 interface StoreState {
   lotStatuses: Record<string, LotStatus>;
   claimStatuses: Record<string, ClaimStatus>;
+  extraLots: PackingLot[];
   extraClaims: Claim[];
   extraRecalls: Recall[];
   recallStatuses: Record<string, RecallStatus>;
@@ -22,6 +24,7 @@ interface StoreState {
 const empty: StoreState = {
   lotStatuses: {},
   claimStatuses: {},
+  extraLots: [],
   extraClaims: [],
   extraRecalls: [],
   recallStatuses: {},
@@ -99,6 +102,8 @@ interface StoreApi extends StoreState {
   getRecall: (id: string) => Recall | undefined;
   allRecalls: () => Recall[];
   allClaims: () => Claim[];
+  allLots: () => PackingLot[];
+  addLot: (input: { variety: string; destinationCountry: string; boxCount: number }) => PackingLot;
   addDossier: (lotId: string) => { id: string; lotId: string; createdAt: string };
 }
 
@@ -212,6 +217,53 @@ export function StoreProvider({ children }: { children: ReactNode }) {
           status: state.claimStatuses[c.id] ?? c.status,
           comments: state.claimComments[c.id] ?? c.comments,
         })),
+      allLots: () => {
+        const extras = state.extraLots ?? [];
+        const extraOnly = extras.filter((lot) => !seedLots.some((s) => s.id === lot.id));
+        return [...seedLots, ...extraOnly].map((lot) => ({
+          ...lot,
+          status: state.lotStatuses[lot.id] ?? lot.status,
+        }));
+      },
+      addLot: (input) => {
+        const seed =
+          seedLots.find((l) => l.id === (input.variety === "Biloxi" ? "EMP-2026-0845" : "EMP-2026-0841")) ??
+          seedLots[0];
+        const current = [...seedLots, ...(getClientSnapshot().extraLots ?? [])];
+        const maxN = current.reduce((max, lot) => {
+          const n = Number(lot.id.match(/EMP-2026-(\d+)/)?.[1] ?? 0);
+          return Math.max(max, n);
+        }, 0);
+        const seq = maxN + 1;
+        const id = `EMP-2026-${String(seq).padStart(4, "0")}`;
+        const boxFromN = 9000 + (seq - 841) * 80;
+        const boxToN = boxFromN + input.boxCount - 1;
+        const now = new Date().toISOString();
+        const date = now.slice(0, 10);
+        const lot: PackingLot = {
+          ...seed,
+          id,
+          variety: input.variety,
+          productId: input.variety === "Biloxi" ? "PROD-BILOXI" : "PROD-VENTURA",
+          status: "autorizado",
+          boxIds: Array.from({ length: input.boxCount }, (_, i) => `C-${boxFromN + i}`),
+          boxFrom: `C-${boxFromN}`,
+          boxTo: `C-${boxToN}`,
+          boxCount: input.boxCount,
+          palletIds: [`PAL-${String(200 + seq).padStart(3, "0")}`],
+          destinationIds: [],
+          qualityControlIds: [],
+          claimIds: [],
+          weightKg: sourced(input.boxCount * 1.5, "PackLine", "Sistema de empaque PackLine", now),
+          harvestDate: sourced(date, seed.harvestDate.source.system, seed.harvestDate.source.source, now),
+          processingDate: sourced(date, seed.processingDate.source.system, seed.processingDate.source.source, now),
+          packingDate: sourced(date, "PackLine", "Sistema de empaque PackLine", now),
+          clamshellCount: input.boxCount * 12,
+          destinationCountry: input.destinationCountry,
+        };
+        persist((p) => ({ ...p, extraLots: [...(p.extraLots ?? []), lot] }));
+        return lot;
+      },
       addDossier: (lotId) => {
         const item = {
           id: `AUD-2026-${String(11 + state.generatedDossiers.length).padStart(3, "0")}`,

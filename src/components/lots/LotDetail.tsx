@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/Button";
+import { CountryFlag } from "@/components/ui/CountryFlag";
 import { DataSourceBadge, SourcedValue } from "@/components/ui/DataSourceBadge";
 import { DocumentCard } from "@/components/ui/DocumentCard";
 import { EntityLink } from "@/components/ui/EntityLink";
@@ -95,7 +96,12 @@ export function LotDetail({ lot }: { lot: PackingLot }) {
             <Field label="Estado">
               <StatusBadge status={status} />
             </Field>
-            <Field label="Destino principal">{lot.destinationCountry}</Field>
+            <Field label="Destino principal">
+              <span className="inline-flex items-center gap-2">
+                <CountryFlag country={lot.destinationCountry} />
+                {lot.destinationCountry}
+              </span>
+            </Field>
           </div>
         )}
 
@@ -265,11 +271,14 @@ export function LotDetail({ lot }: { lot: PackingLot }) {
           <div className="space-y-3">
             {ctx.dests.map(({ destination, supermarket, importer, cd }) => (
               <div key={destination.id} className="flex flex-wrap items-center justify-between gap-2 rounded-2xl border border-emerald-100 bg-emerald-50/30 p-3">
-                <div>
-                  <p className="font-medium">{supermarket?.name}</p>
-                  <p className="text-xs text-slate-500">
-                    {importer?.name} · {cd?.code} · {destination.country}
-                  </p>
+                <div className="flex items-start gap-2">
+                  <CountryFlag country={destination.country} />
+                  <div>
+                    <p className="font-medium">{supermarket?.name}</p>
+                    <p className="text-xs text-slate-500">
+                      {importer?.name} · {cd?.code} · {destination.country}
+                    </p>
+                  </div>
                 </div>
                 <div className="flex items-center gap-3">
                   <span className="text-sm">{destination.boxCount} cajas</span>
